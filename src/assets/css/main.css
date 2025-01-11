@@ -1,0 +1,8 @@
+@import './base.css';
+
+body, html{
+  font-size: 16px;
+}
+#app{
+  min-height: 100vh;
+}
