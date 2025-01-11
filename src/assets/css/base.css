@@ -8,14 +8,6 @@
 
 
 
-.el-tabs__item {
-    font-size: 1em !important;
-    font-weight: bold !important;
-}
-
-.el-tabs__nav-wrap::after{
-    background-color: transparent !important;
-}
 /* color palette from <https://github.com/vuejs/theme> */
 /* :root {
   --vt-c-white: #ffffff;

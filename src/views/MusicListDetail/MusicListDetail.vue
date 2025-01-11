@@ -4,7 +4,7 @@
             <img :src="musiclistDetail.coverImgUrl" alt="" class="musiclist-img">
             <div class="profile">
                 <h2>{{ musiclistDetail.name }}</h2>
-                <p class="description"> {{ musiclistDetail.description ? musiclistDetail.descriptiop : "暂无简介"}} </p>
+                <p class="description"> {{ musiclistDetail.description ? musiclistDetail.description : "暂无简介" }} </p>
                 <div class="author-info">
                     <img :src="musiclistDetail.creator.avatarUrl" alt="avatar" class="author-avatar">
                     <span>{{ musiclistDetail.creator.nickname }}</span>
@@ -24,7 +24,10 @@
                     :data="songs" 
                     stripe 
                     highlight-current-row
+                    lazy
+                    :row-key="(row) => { return row.id; }"
                     style="width: 100%"
+                    @row-dblclick="playMusic"
                 >
                     <el-table-column type="index" width="50"  label="#"/>
                     <el-table-column prop="name" label="标题" min-width="230"/>
@@ -39,6 +42,7 @@
             </el-tab-pane>
         </el-tabs>
     </div>
+    <audio ref="audio" :src="audioSrc" autoplay style="display: none;"></audio>
 </template>
 
 <script setup>
@@ -47,7 +51,6 @@
     import { ref } from 'vue';
     import { formatDate } from '@/utils/utils';
     import { handleMusicTime } from '@/utils/utils';
-
     const musiclistDetail = ref(null);
     const songs = ref(null);
     const route = useRoute()
@@ -57,6 +60,7 @@
         return formatDate(date, "yyyy-MM-dd");
     }
 
+    // 根据歌单id获取歌单详情信息
     const getMusicListDetail = async () => {
         const res = await request('/playlist/detail', {
             id: route.params.id
@@ -65,6 +69,7 @@
         // console.log(musiclistDetail.value)
     }
 
+    // 根据歌单id获取歌单中全部歌曲的信息
     const getMusicListAllSong = async () => {
         const res = await request("/playlist/track/all", {
             id: route.params.id
@@ -73,14 +78,42 @@
         songs.value.forEach((item, index) => {
             songs.value[index].dt = handleMusicTime(item.dt);
         });
-        console.log(songs.value)
+        // console.log(songs.value)
     }
+
+    const audio = ref(null);
+    const audioSrc = ref(null);
+    const playMusic = async (rowItem) => {
+        console.log(rowItem.id);
+        try {
+            const res = await request('/song/url', { id: rowItem.id });
+            console.log(res.data.data[0].url);
+            audioSrc.value = res.data.data[0].url;  
+            
+            audio.value.load();  
+
+            // 监听音频加载完成后播放
+            audio.value.oncanplaythrough = () => {
+                audio.value.play();
+            };
+        } catch (error) {
+            console.error('获取音频 URL 出错:', error);
+        }
+    };
 
     getMusicListDetail()
     getMusicListAllSong()
 </script>
 
 <style scoped>
+    ::v-deep .el-tabs__item {
+        font-size: 1em !important;
+        font-weight: bold !important;
+    }
+
+    ::v-deep .el-tabs__nav-wrap::after{
+        background-color: transparent !important;
+    }
     .music-detail{
         display: flex;
         flex-direction: column;
@@ -117,6 +150,14 @@
         display: flex;
         align-items: center;
         gap: 5px;
+    }
+    .profile .description{
+        display: -webkit-box;
+        -webkit-line-clamp: 5;          /* 设置显示的行数 */
+        -webkit-box-orient: vertical;   /* 设置布局方向 */
+        overflow: hidden;               /* 超出部分隐藏 */
+        text-overflow: ellipsis;        /* 溢出的文本显示省略号 */
+        max-height: 120px;               /* 设置最大高度 */
     }
     .musiclist-info .profile .btns{
         flex-grow: 1;

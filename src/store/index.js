@@ -6,7 +6,7 @@ const store = createStore({
         isLogin: false,
     },
     mutations: {
-        updateLoginState(state, flag = false) {
+        updateLoginState(state, flag) {
             state.isLogin = flag;
         },
     }

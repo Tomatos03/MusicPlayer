@@ -48,13 +48,9 @@
         activeIndex.value = newIndex;
         router.push(newIndex);
     };
-// const getUserMusicList = async () => {
+    // const getLikeMusicList = async () => {
 
-// }
-
-// const getLikeMusicList = async () => {
-
-// }
+    // }
 </script>
 
 <style>
