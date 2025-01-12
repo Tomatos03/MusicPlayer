@@ -9,20 +9,26 @@
     import { request } from '@/network/request';
     import { getTimeStamp } from '@/utils/utils';
     import { ElMessage } from 'element-plus';
-    import { onBeforeUnmount, ref } from 'vue';
+    import { onBeforeUnmount, ref, watch } from 'vue';
     import { useStore } from 'vuex';
-    const CHECK_CAPTCHA_INTERVAL = 2000
+    const { activeIndex } = defineProps({
+        activeIndex: {
+            type: Number,
+            required: true
+        }
+    });
+    const CHECK_CAPTCHA_INTERVAL = 2000;
     const CaptchaState = Object.freeze({
         EXPIRED: 800,        // 二维码过期
         WAITING_SCAN: 801,   // 等待扫码
         WAITING_CONFIRM: 802,// 待确认
         SUCCESS: 803      // 授权登录成功
     });
-    const emit = defineEmits()
+    const emit = defineEmits();
     const store = useStore();
-    const captchaUrl = ref(null)
-    const captchaKey = ref(null)
-    let checkCaptchaStatus = null
+    const captchaUrl = ref(null);
+    const captchaKey = ref(null);
+    let checkCaptchaStatus = null;
     const getCaptchaKey = async () => {
         const res = await request('/login/qr/key', { timestamp: getTimeStamp() });
         // console.log(res);
@@ -52,7 +58,8 @@
         await getCaptcha();
 
         checkCaptchaStatus = setInterval(async () => {
-            if(store.state.isLogin) {
+            if(store.state.isLogin || activeIndex != 0) {
+                clearInterval(checkCaptchaStatus);
                 return;
             };
 
@@ -60,7 +67,7 @@
             if(CaptchaState.SUCCESS === code){
                 clearInterval(checkCaptchaStatus);
                 getAccountInfo();
-                console.log("登录成功");
+                // console.log("登录成功");
             } else if(CaptchaState.EXPIRED === code){
                 updateCaptcha();
             }
@@ -82,6 +89,12 @@
             emit('loginSuccess', res.data.profile);
         }
     }
+
+    // 解构props不能直接提供给watch，需要使用getter方法间接提供
+    watch(() => activeIndex, () => {
+        if(activeIndex != 0) return;
+        startCaptchaLogin();
+    });
 
     onBeforeUnmount(async () => {
         clearInterval(checkCaptchaStatus);

@@ -19,8 +19,9 @@ export function request(url, params) {
   instance.interceptors.response.use(
     (config) => {
       const code = config.data.code;
-      if (code !== 200 && !(code >= 800 && code <= 803))
+      if (code !== 200 && !(code >= 800 && code <= 803)) {
         ElMessage.error(config.data.message || '未知错误, 请打开控制台查看');
+      }
       return config;
     },
     (err) => {

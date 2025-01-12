@@ -106,13 +106,9 @@
 </script>
 
 <style scoped>
-    ::v-deep .el-tabs__item {
-        font-size: 1em !important;
-        font-weight: bold !important;
-    }
-
-    ::v-deep .el-tabs__nav-wrap::after{
-        background-color: transparent !important;
+    :deep(.el-tabs__item) {
+        font-size: 1em;
+        font-weight: bold;
     }
     .music-detail{
         display: flex;

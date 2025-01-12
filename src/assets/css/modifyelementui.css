@@ -1,0 +1,7 @@
+:root {
+  /* --el-color-primary: #fc3d49 !important;
+  --el-button-hover-bg-color: #f27c84 !important; */
+}
+.el-tabs__nav-wrap::after{
+    background-color: transparent !important;
+}

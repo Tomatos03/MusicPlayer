@@ -5,7 +5,7 @@
                 :router="true"
                 :default-active="activeIndex" 
                 :show-timeout="300"
-                :hide-timeout="250">
+                :hide-timeout="300">
                 <el-menu-item class="aside-list-item"
                     v-for="(item, index) in asideListItem"
                         :key="index"
@@ -53,13 +53,12 @@
     // }
 </script>
 
-<style>
-    /*#787F8D*/
-    .aside-list-item{
+<style scoped>
+    :deep(.aside-list-item){
         font-size: 1em;
         color: #787F8D;
     }
-    .aside-list-item.is-active {
+    :deep(.aside-list-item.is-active){
         background-color: #FC3D49;
         color: #ffffff;
         font-weight: bold
@@ -70,7 +69,7 @@
         --el-menu-active-color: #ffffff;
     }
     .el-header {
-        padding: 0 !important;
+        padding: 0;
         height: 100px;
     }
     .el-header,

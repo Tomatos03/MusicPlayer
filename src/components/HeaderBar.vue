@@ -9,11 +9,11 @@
         <div class="headerbar-right">
             <div @click="userLogin" class="login-container">
                 <el-popover 
+                    v-if="!userInfo"
                     :width="300" 
                     trigger="click"
                     @hide="attemptLogin = false"
                     @show="attemptLogin = true"
-                    v-if="!userInfo"
                 >
                     <template #reference>
                         <Avatar class="avatar" />
@@ -33,8 +33,8 @@
 <script setup>
     import { ref } from 'vue';
     import Login from './Login/Login.vue';
-    const userInfo = ref(null);
     const attemptLogin = ref(false);
+    const userInfo = ref(null);
     const handleLoginSucess = (userProfile) => {
         console.log("HeaderBar", userProfile);
         userInfo.value = userProfile;
