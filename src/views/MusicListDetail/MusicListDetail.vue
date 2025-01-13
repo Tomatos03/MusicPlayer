@@ -5,10 +5,18 @@
             <div class="profile">
                 <h2>{{ musiclistDetail.name }}</h2>
                 <p class="description"> {{ musiclistDetail.description ? musiclistDetail.description : "暂无简介" }} </p>
+                <p>标签: 
+                    <template v-if="musiclistDetail.tags.length > 0">
+                        <span style="color: #00B2FF" v-for="tag in musiclistDetail.tags">
+                            {{ tag + " " }}
+                        </span>
+                    </template>
+                    <span v-else>暂无标签</span>
+                </p>
                 <div class="author-info">
                     <img :src="musiclistDetail.creator.avatarUrl" alt="avatar" class="author-avatar">
                     <span>{{ musiclistDetail.creator.nickname }}</span>
-                    <span style="color: #D1D3D8;">{{ showDate(musiclistDetail.createTime) }}</span>
+                    <span style="color: #949494;">{{ showDate(musiclistDetail.createTime) }}</span>
                 </div>
                 <div class="btns">
                     <el-button color="#FC3D49" size="large" type="primary" :icon="'CaretRight'">播放全部</el-button>
@@ -24,7 +32,6 @@
                     :data="songs" 
                     stripe 
                     highlight-current-row
-                    lazy
                     :row-key="(row) => { return row.id; }"
                     style="width: 100%"
                     @row-dblclick="playMusic"
@@ -66,7 +73,7 @@
             id: route.params.id
         });
         musiclistDetail.value = res.data.playlist;
-        // console.log(musiclistDetail.value)
+        console.log(musiclistDetail.value)
     }
 
     // 根据歌单id获取歌单中全部歌曲的信息

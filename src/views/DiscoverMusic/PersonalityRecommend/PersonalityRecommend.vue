@@ -49,7 +49,7 @@
     getMusicListData();
 </script>
 
-<style scope>
+<style scoped>
     img{
         border-radius: 10px;
         height: 100%;

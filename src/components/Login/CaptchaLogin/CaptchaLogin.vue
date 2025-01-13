@@ -5,6 +5,11 @@
     </div>
 </template>
 
+<!--
+    获取二维码流程：
+    发送请求从服务器获取二维码key
+    将key作为参数发送新请求从服务器获取二维码图片
+-->
 <script setup>
     import { request } from '@/network/request';
     import { getTimeStamp } from '@/utils/utils';
