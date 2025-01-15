@@ -1,6 +1,10 @@
 <template>
     <el-container style="height: 100vh">
         <el-aside width="250px">
+            <div class="logo">
+                <ElementPlus style="width: 60px; height: 60px; color: red;"/>
+                <span>MusicPlayer</span>
+            </div>
             <el-menu @select="handleSelect" 
                 :router="true"
                 :default-active="activeIndex" 
@@ -54,6 +58,12 @@
 </script>
 
 <style scoped>
+    .el-aside .logo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px;
+    }
     :deep(.aside-list-item){
         font-size: 1em;
         color: #787F8D;
@@ -64,9 +74,11 @@
         font-weight: bold
     }
     .el-menu {
-        height: 100vh;
-        --el-menu-bg-color: #F0F3F6;
+        background-color: transparent;
         --el-menu-active-color: #ffffff;
+    }
+    .el-aside{
+        background-color: #F0F3F6;
     }
     .el-header {
         padding: 0;

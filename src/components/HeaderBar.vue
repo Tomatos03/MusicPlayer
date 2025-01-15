@@ -6,11 +6,13 @@
             </el-icon>
             <div class="search-container">
                 <el-input 
+                    clearable
                     v-model="searchContent"
                     class="search" 
                     style="height: 40px; width: 300px;"
                     prefix-icon="Search"
                     @focus="showSearchSuggest = true"
+                    @keyup.enter="submissionSearchContent"
                     @blur="hideSearchSuggest"/>
                 <el-scrollbar height="400px" v-if="showSearchSuggest" class="search-suggest">
                     <div class="hot-search-list">
@@ -58,6 +60,7 @@
     import { ref } from 'vue';
     import Login from './Login/Login.vue';
     import { request } from '@/network/request';
+    import { useRouter } from 'vue-router';
     const attemptLogin = ref(false);
     const userInfo = ref(null);
     const hotSearchList = ref(null);
@@ -66,7 +69,7 @@
     const hideSearchSuggest = () => {
         setTimeout(() => {
             showSearchSuggest.value = false;
-        }, 130);
+        }, 150);
     };
     const handleLoginSucess = (userProfile) => {
         console.log("HeaderBar", userProfile);
@@ -76,6 +79,12 @@
         // console.log(item.target.textContent);
         // 由于换行多产生了一个空格，从第4个字符起为空格
         searchContent.value = item.target.textContent.substring(3).trim();
+        submissionSearchContent();
+    }
+    const router = useRouter();
+    const submissionSearchContent = () => {
+        if(!searchContent.value) return;
+        router.push({name: "searchResult", params: { content: searchContent.value }});
     }
     const getHotSearch = async () => {
         const res = await request('/search/hot/detail');

@@ -1,4 +1,3 @@
-import { imageProps } from 'element-plus'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const Index = () => import('../views/Index.vue')
@@ -14,6 +13,7 @@ const MusicRank = () => import('../views/DiscoverMusic/MusicRank/MusicRank.vue')
 const Singer = () => import('../views/DiscoverMusic/Singer/Singer.vue')
 
 const MusicListDetail = () => import('../views/MusicListDetail/MusicListDetail.vue');
+const SearchResultDetail= () => import('../views/SearchResultDetail/SearchResultDetail.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,6 +66,11 @@ const router = createRouter({
         {
           path: '/dailyRecommend',
           component: DailyRecommend
+        },
+        {
+          path: '/searchResult/:content',
+          name: 'searchResult',
+          component: SearchResultDetail
         }
       ]
     },
