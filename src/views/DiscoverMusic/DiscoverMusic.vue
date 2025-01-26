@@ -33,6 +33,6 @@
     .discover-music{
         padding: 20px;
         height: calc(100vh - 116px - 50px); /* 视窗大小减掉navbar高度、el-header高度*/
-        overflow: auto
+        overflow: auto;
     }
 </style>

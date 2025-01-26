@@ -118,7 +118,7 @@
         z-index: 3;
         border-radius: 10px;
         margin-top: 10px;
-        box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 5px 5px 0px rgba(0, 0, 0, 0.2);
         height: 400px;
     }
     

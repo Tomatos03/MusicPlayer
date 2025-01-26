@@ -33,14 +33,30 @@
 
 <script setup>
     import HeaderBar from '@/components/HeaderBar.vue';
-    import { RouterView, useRouter } from 'vue-router';
+    import { RouterView, useRoute, useRouter } from 'vue-router';
     import { ref } from 'vue';
     const asideListItem = ref([
-        {name: "发现音乐", path: "/discoverMusic", class: "iconfont icon-yinle"},
-        {name: "视频", path: "/video", class: "iconfont icon-shipin"},
-        {name: "收藏", path: "/collect", class: "iconfont icon-wodeshoucang"},
-        {name: "每日推荐", path: "/dailyRecommend", class: "iconfont icon-good"},
-    ])
+        {
+            name: "发现音乐", 
+            path: "/discoverMusic", 
+            class: "iconfont icon-yinle"
+        },
+        { 
+            name: "视频", 
+            path: "/video", 
+            class: "iconfont icon-shipin"
+        },
+        { 
+            name: "收藏", 
+            path: "/collect", 
+            class: "iconfont icon-wodeshoucang"
+        },
+        { 
+            name: "每日推荐", 
+            path: "/dailyRecommend", 
+            class: "iconfont icon-good"
+        },
+    ]);
     const activeIndex = ref("/discoverMusic");
     const router = useRouter();
 
@@ -52,9 +68,17 @@
         activeIndex.value = newIndex;
         router.push(newIndex);
     };
-    // const getLikeMusicList = async () => {
-
-    // }
+    const route = useRoute();
+    // 修正因为刷新导致的选中项重置
+    const amendSelectedItem = () => {
+        asideListItem.value.forEach((item) => {
+            if(item.path == route.path) {
+                activeIndex.value = item.path;
+                return;
+            }
+        })
+    }
+    amendSelectedItem();
 </script>
 
 <style scoped>
@@ -62,7 +86,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 10px;
+        margin: 30px;
     }
     :deep(.aside-list-item){
         font-size: 1em;
