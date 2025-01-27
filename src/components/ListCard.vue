@@ -14,7 +14,7 @@
 <script setup>
     const props = defineProps({
         listCardData: {
-            type: Array,
+            type: [Object, Array],
             required: true
         }
     });

@@ -156,7 +156,7 @@
     }
     .profile .description{
         display: -webkit-box;
-        -webkit-line-clamp: 5;          /* 设置显示的行数 */
+        -webkit-line-clamp: 3;          /* 设置显示的行数 */
         -webkit-box-orient: vertical;   /* 设置布局方向 */
         overflow: hidden;               /* 超出部分隐藏 */
         text-overflow: ellipsis;        /* 溢出的文本显示省略号 */

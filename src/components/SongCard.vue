@@ -26,7 +26,7 @@
     import { defineProps, ref } from 'vue';
     const props = defineProps({
         song: {
-            type: Array,
+            type: [Object, Array],
             required: true
         }
     });

@@ -21,7 +21,7 @@
     import { ref } from 'vue';
     const props = defineProps({
         mv: {
-            type: Array,
+            type: [Object, Array],
             required: true
         }
     });
@@ -41,6 +41,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         max-width: 280px;
+        text-align: center;
     }
     .mv-img .watched-number{
         position: absolute;
@@ -69,8 +70,10 @@
     }
     .mv-img{
         position: relative;
+        width: 100%;
     }
     .mv-card{
+        display: none;
         position: relative;
         cursor: pointer;
         display: flex;
@@ -78,8 +81,9 @@
         align-items: center;
         justify-content: center;
         gap: 5px;
-        width: 280px;
-        flex-shrink: 0;
+        min-width: 250px;
+        max-width: 300px;
+        flex: 1;
     }
     
     .mv-img > i{

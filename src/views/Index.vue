@@ -1,20 +1,18 @@
 <template>
-    <el-container style="height: 100vh">
-        <el-aside width="250px">
+    <el-container class="index">
+        <el-aside>
             <div class="logo">
                 <ElementPlus style="width: 60px; height: 60px; color: red;"/>
-                <span>MusicPlayer</span>
+                <span style="font: 1.2em bold;">MusicPlayer</span>
             </div>
             <el-menu @select="handleSelect" 
                 :router="true"
                 :default-active="activeIndex" 
                 :show-timeout="300"
                 :hide-timeout="300">
-                <el-menu-item class="aside-list-item"
-                    v-for="(item, index) in asideListItem"
-                        :key="index"
-                        :index="item.path"
-                >
+                <el-menu-item v-for="(item, index) in asideListItem"
+                                :key="index"
+                                :index="item.path">
                     <i :class="item.class"></i>
                     <span style="margin-left: 5px;">{{ item.name }}</span>
                 </el-menu-item>
@@ -39,22 +37,22 @@
         {
             name: "发现音乐", 
             path: "/discoverMusic", 
-            class: "iconfont icon-yinle"
+            class: "iconfont icon-find"
         },
         { 
             name: "视频", 
             path: "/video", 
-            class: "iconfont icon-shipin"
+            class: "iconfont icon-vedio"
         },
         { 
             name: "收藏", 
             path: "/collect", 
-            class: "iconfont icon-wodeshoucang"
+            class: "iconfont icon-collect"
         },
         { 
             name: "每日推荐", 
             path: "/dailyRecommend", 
-            class: "iconfont icon-good"
+            class: "iconfont icon-daliy"
         },
     ]);
     const activeIndex = ref("/discoverMusic");
@@ -82,17 +80,29 @@
 </script>
 
 <style scoped>
+    .index{
+        height: 100vh;
+    }
     .el-aside .logo{
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 30px;
     }
-    :deep(.aside-list-item){
+    .el-menu-item i{
+        font-size: 25px;
+        vertical-align: middle;
+    }
+    .el-menu-item span{
+        vertical-align: middle;
+    }
+    .el-menu-item{
         font-size: 1em;
         color: #787F8D;
+        margin: 5px 20px;
+        border-radius: 10px;
     }
-    :deep(.aside-list-item.is-active){
+    .el-menu-item.is-active{
         background-color: #FC3D49;
         color: #ffffff;
         font-weight: bold
@@ -103,6 +113,9 @@
     }
     .el-aside{
         background-color: #F0F3F6;
+        max-width: 300px;
+        min-width: 230px;
+        width: 20vw;
     }
     .el-header {
         padding: 0;
@@ -110,10 +123,11 @@
     }
     .el-header,
     .el-main {
+        width: 80vw;
+        min-width: 700px;
         background-color: #F7F9FC;
     }
     .el-main{
-        padding: 0;
-        overflow-y: hidden;
+        overflow: hidden;
     }
 </style>

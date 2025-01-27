@@ -1,12 +1,6 @@
 <template>
-    <div>
-        <div class="carousel-container">
-            <el-carousel :interval="3000" type="card" height="230px">
-                <el-carousel-item v-for="(item, index) in carouselData" :key="index">
-                    <img :src="item.imageUrl" alt="" />
-                </el-carousel-item>
-            </el-carousel>
-        </div>
+    <div class="personality-recommend">
+        <SliderCard :sliders="sliders"/>
         <div class="recommendMusicList">
             <h2 style="display: flex; align-items: center; margin-bottom: 15px;">
                 推荐歌单
@@ -20,11 +14,12 @@
 
 <script setup>
     import ListCard from '@/components/ListCard.vue'
+    import SliderCard from '@/components/SliderCard.vue';
     import { request } from '@/network/request'
     import { ref } from 'vue'
     import { useRouter } from 'vue-router';
 
-    const carouselData = ref([]);
+    const sliders = ref([]);
     const musicList = ref([]);
     const router = useRouter();
     
@@ -35,7 +30,7 @@
 
     const getCarouselData = async () => {
         const res = await request('/banner');
-        carouselData.value = res.data.banners;
+        sliders.value = res.data.banners;
         //console.log(carouselData.value);
     }
 
@@ -50,10 +45,9 @@
 </script>
 
 <style scoped>
-    img{
-        border-radius: 10px;
-        height: 100%;
-        width: 100%;
-        object-fit: fill;
+    .personality-recommend{
+        padding: 0 20px 20px 20px;
+        height: calc(100vh - 160px); /* 视窗大小减掉navbar高度、el-header高度*/
+        overflow: auto;
     }
 </style>

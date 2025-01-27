@@ -4,98 +4,25 @@
             {{ searchContent }} 
             <span style="color: #c3c3c3; font-size: 0.7em; font-weight: normal;">的搜索结果如下：</span>
         </h1>
-        <!-- <el-tabs v-model="activeTab">
-            <el-tab-pane label="综合">
-                <div class="song-container">
-                    <h3 class="title">
-                        单曲
-                        <ArrowRightBold style="width: 20px; height: 20px;"/>
-                    </h3>
-                    <div class="song-card-container" v-if="searchResult">
-                        <SongCard v-for="song in searchResult.song.songs" 
-                                    :song="song"/>
-                    </div>
-                </div>
-
-                <div class="mv-container" v-if="mvSearchResult">
-                    <h3 @click="goToMVDetail" class="title">
-                        MV
-                        <ArrowRightBold style="width: 20px; height: 20px;"/>
-                    </h3>
-                    <div class="mv-card-container">
-                        <MVCard v-for="mv in mvSearchResult.mvs"
-                                    :mv="mv"/>
-                    </div>
-                </div>
-
-                <div class="singer-container" v-if="searchResult">
-                    <h3 class="title">
-                        歌手
-                        <ArrowRightBold style="width: 20px; height: 20px;"/>
-                    </h3>
-                    <div class="singer-card-container">
-                        <SingerCard v-for="user in searchResult.artist.artists"
-                                        :user="user"/>
-                    </div>
-                </div>
-
-                <div class="album-container">
-                    <h3 class="title">
-                        专辑
-                        <ArrowRightBold style="width: 20px; height: 20px;"/>
-                    </h3>
-                    <div class="album-card-container" v-if="searchResult">
-                        <AlbumCard v-for="album in searchResult.album.albums"
-                                    :album="album"/>
-                    </div>
-                </div>
-
-                <div class="user-container" v-if="searchResult">
-                    <h3 class="title">
-                        用户
-                        <ArrowRightBold style="width: 20px; height: 20px;"/>
-                    </h3>
-                    <div class="user-card-container">
-                        <UserCard v-for="user in searchResult.user.users"
-                                        :user="user"/>
-                    </div>
-                </div>
-            </el-tab-pane>
-            <el-tab-pane label="单曲">
-            </el-tab-pane>
-            <el-tab-pane label="歌手">
-                <div class="singer-card-container" v-if="searchResult">
-                    <SingerCard v-for="user in searchResult.artist.artists"
-                                    :user="user"/>
-                </div>
-            </el-tab-pane>
-            <el-tab-pane label="声音">
-            </el-tab-pane>
-            <el-tab-pane label="播客">
-            </el-tab-pane>
-            <el-tab-pane label="歌词">
-            </el-tab-pane>
-            <el-tab-pane label="专辑">
-            </el-tab-pane>
-            <el-tab-pane label="MV">
-            </el-tab-pane>
-            <el-tab-pane label="用户">
-            </el-tab-pane>
-        </el-tabs> -->
         <el-tabs v-model="activeTab">
             <el-tab-pane v-for="tab in tabs"
                             :label="tab.label">
                 <template v-for="component in tab.components">
-                    <div class="title" v-if="component.title"> 
-                        {{ component.title }} 
-                        <ArrowRightBold style="width: 20px; height: 20px;"/>
-                    </div>
-                    <div :class="component.parrentContainer" v-if="component.root">
-                        <component :is="component.name"
-                            v-for="(data, index) in parseDataSource(component.dataSource, component.root)"
-                                :key="index"
-                                :[component.propName]="data"/>
-                    </div>
+                    <template v-if="parseDataSource(component.dataSource, component.root)">
+                        <div class="title" v-if="component.title"> 
+                            {{ component.title }} 
+                            <ArrowRightBold style="width: 20px; height: 20px;"/>
+                        </div>
+                        <AdaptiveContainer :class="component.parrentContainer" 
+                                            :itemMinWidth="250">
+                            <template #content>
+                                <component :is="component.name"
+                                    v-for="(data, index) in parseDataSource(component.dataSource, component.root)"
+                                        :key="index"
+                                        :[component.propName]="data"/>
+                            </template>
+                        </AdaptiveContainer>
+                    </template>
                 </template>
             </el-tab-pane>
         </el-tabs>
@@ -110,6 +37,7 @@
     import MVCard from '@/components/MVCard.vue';
     import AlbumCard from '@/components/AlbumCard.vue';
     import SongCard from '@/components/SongCard.vue';
+    import AdaptiveContainer from '@/components/AdaptiveContainer.vue';
     const searchResult = ref(null);
     const mvSearchResult = ref(null);
     const tabs = [
@@ -236,14 +164,14 @@
         display: flex;
         align-items: center;
     }
-    
+
     .user-card-container,
     .album-card-container,
     .singer-card-container,
     .mv-card-container{
         display: flex;
-        gap: 25px;
-        /* flex-wrap: wrap; */
+        gap: 20px;
+        flex-wrap: nowrap;
         overflow: hidden;
         padding: 10px 0;
     }
@@ -256,7 +184,7 @@
     }
 
     .search-result-detail{
-        padding: 25px;
+        padding: 0 25px 25px 25px;
         width: 100%;
         height: 100%;
         background-color: #F7F9FC;

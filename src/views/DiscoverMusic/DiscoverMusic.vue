@@ -2,7 +2,7 @@
     <div class="navbar-container">
         <NavBar :navItems="navItems" @navBarClickItem="handleNavBarClickItem"/>
     </div>
-    <RouterView class="discover-music"/>
+    <RouterView/>
 </template>
 
 
@@ -29,10 +29,5 @@
     .navbar-container{
         width: 100%;
         height: 50px;
-    }
-    .discover-music{
-        padding: 20px;
-        height: calc(100vh - 116px - 50px); /* 视窗大小减掉navbar高度、el-header高度*/
-        overflow: auto;
     }
 </style>

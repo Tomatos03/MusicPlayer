@@ -7,7 +7,7 @@
             <img :src="props.user.img1v1Url || props.user.avatarUrl">
             <i class="iconfont icon-play"></i>
         </div>
-        <h4>{{ props.user.name || props.user.nickname}}</h4>
+        <h4 style="font-size: 1.1em;">{{ props.user.name || props.user.nickname}}</h4>
         <p v-if="props.user.albumSize"> 专辑数量：{{ props.user.albumSize }}</p>
         <p v-else-if="props.user.signature">{{ props.user.signature }}</p>
     </div>
@@ -16,7 +16,7 @@
     import { ref, defineProps } from 'vue';
     const props = defineProps({
         user: {
-            type: Array,
+            type: [Object, Array],
             required: true
         }
     });
@@ -31,6 +31,7 @@
 </script>
 <style scoped>
     .avatar{
+        width: 100%;
         position: relative;
     }
 
@@ -62,8 +63,18 @@
         align-items: center;
         justify-content: center;
         border-radius: 10px;
-        min-height: 230px;
-        min-width: 160px;
+        max-width: 200px;
+        min-width: 140px;
+        flex: 1;
+        padding: 20px;
+    }
+    .user-card p{
+        width: 120px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 0.9em;
+        text-align: center;
     }
     .user-card.active{
         background-color: white;
@@ -73,8 +84,8 @@
         filter: brightness(70%);
     }
     .user-card img{
-        width: 120px;
-        height: 120px;
+        width: 100%;
+        aspect-ratio: 1;
         border-radius: 50%;
     }
 </style>

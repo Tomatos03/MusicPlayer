@@ -15,7 +15,7 @@
     import { ref } from 'vue';
     const props = defineProps({
         album: {
-            type: Array,
+            type: [Object, Array],
             required: true
         }
     });
@@ -34,6 +34,7 @@
 <style scoped>
     .album-img{
         position: relative;
+        width: 100%;
     }
     .album-card{
         position: relative;
@@ -43,9 +44,17 @@
         align-items: center;
         justify-content: center;
         gap: 5px;
+        min-width: 180px;
+        max-width: 210px;
+        flex: 1;
+    }
+    .album-card p{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
     .album-card img{
-        width: 200px;
+        width: 100%;
         height: 250px;
         object-fit: cover;
         border-radius: 10px;
