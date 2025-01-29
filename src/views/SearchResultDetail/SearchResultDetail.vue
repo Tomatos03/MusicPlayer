@@ -164,7 +164,7 @@
         display: flex;
         align-items: center;
     }
-
+    
     .user-card-container,
     .album-card-container,
     .singer-card-container,
@@ -175,7 +175,7 @@
         overflow: hidden;
         padding: 10px 0;
     }
-
+    
     .song-card-container{
         display: flex;
         gap: 5px;

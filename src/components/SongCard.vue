@@ -9,11 +9,7 @@
         </div>
         <div class="song-info">
             <div class="song-name">{{ props.song.name }}</div>
-            <div class="song-authors">
-                <span v-for="(author, index) in props.song.ar"> 
-                    {{ author.name }} {{ index === props.song.ar.length - 1 ? '' : '/' }} 
-                </span>
-            </div>
+            <div class="song-authors">{{ getAuthors(props.song.ar) }}</div>
         </div>
         <div class="song-btns">
             <i class="iconfont icon-download"></i>
@@ -31,6 +27,15 @@
         }
     });
     const songCardRef = ref(null);
+    const getAuthors = (authors) => {
+        let authorsInfo = "";
+        const n = authors.length;
+        for(let i = 0; i < n; ++i) {
+            authorsInfo += authors[i].name;
+            if(i != n - 1) authorsInfo += '/';
+        }
+        return authorsInfo;
+    };
     const mouseOverSongCard = () => {
         songCardRef.value.classList.add("active");
     }
@@ -98,7 +103,14 @@
     .song-info{
         flex: 1;
         min-width: 0;
-        padding: 5px;
+        padding-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .song-name{
         overflow: hidden;
@@ -107,6 +119,10 @@
         text-overflow: ellipsis;
     }
     .song-authors{
+        color: #8c8c8c;
         font-size: 0.9em;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 </style>

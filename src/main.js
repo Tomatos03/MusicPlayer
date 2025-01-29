@@ -12,7 +12,6 @@ import 'element-plus/dist/index.css'
 
 import router from './router'
 import store from './store'
-import UserCard from './components/UserCard.vue'
 
 
 const app = createApp(App)
