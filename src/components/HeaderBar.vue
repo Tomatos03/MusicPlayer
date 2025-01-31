@@ -46,13 +46,13 @@
             </div>
         </div>
         <div class="headerbar-right">
-            <div @click="userLogin" class="login-container">
-                <el-popover 
-                    v-if="!userInfo"
+            <div class="login-container">
+                <el-popover v-if="!accountDetail"
                     :width="300" 
                     trigger="click"
                     @hide="attemptLogin = false"
                     @show="attemptLogin = true">
+                    <!-- #reference定义触发Popover的DOM -->
                     <template #reference>
                         <div class="user-no-login">
                             <el-avatar icon="UserFilled"
@@ -61,11 +61,16 @@
                             <div>未登录</div>
                         </div>
                     </template>
-                    <Login v-if="attemptLogin" @loginSuccess="handleLoginSucess"/>
+                    <!-- 触发后展示的内容 -->
+                    <Login v-if="attemptLogin" @loginSuccess="getCurrentAccountDetail"/>
+            
                 </el-popover>
-                <template v-if="userInfo">
-                    <el-avatar :size="40" :src="userInfo.avatarUrl" fit="cover"/>
-                    <div>{{ userInfo.nickname }}</div>
+                <template v-else>
+                    <el-avatar :size="40" 
+                            @click="goToCurrentAccountDetail"
+                            :src="accountDetail.avatarUrl" 
+                            fit="cover"/>
+                    <div>{{ accountDetail.nickname }}</div>
                 </template>
             </div>
         </div>
@@ -77,8 +82,11 @@
     import Login from './Login/Login.vue';
     import { request } from '@/network/request';
     import { useRouter } from 'vue-router';
+    import { useStore } from 'vuex';
+    import { getTimeStamp } from '@/utils/utils';
+    const store = useStore()
     const attemptLogin = ref(false);
-    const userInfo = ref(null);
+    const accountDetail = ref(null);
     const hotSearchList = ref(null);
     const showSearchSuggest = ref(false);
     const currentSearchContent = ref('');
@@ -115,10 +123,6 @@
             showSearchSuggest.value = false;
         }, 150);
     };
-    const handleLoginSucess = (userProfile) => {
-        console.log("HeaderBar", userProfile);
-        userInfo.value = userProfile;
-    }
     const getHotSearchContent = (clckedItem) => {
         // console.log(item.target.textContent);
         // 由于换行多产生了一个空格，从第4个字符起为空格
@@ -130,12 +134,31 @@
         currentSearchContent.value = searchContent;
         router.push({name: "searchResult", params: { content: searchContent }});
     }
+    const goToCurrentAccountDetail = () => {
+        const uid = localStorage.getItem("uid");
+        router.push({name:"accountDetail", params: { uid: uid}});
+    }
     const getHotSearch = async () => {
         const res = await request('/search/hot/detail');
         // console.log("热搜列表: ", res);
         hotSearchList.value = res.data.data;
     }
+    const getCurrentAccountDetail = async () => {
+        const res = await request('/user/account', {
+            timestamp: getTimeStamp()
+        });
+        // console.log(res);
+        if (res.data.profile != null) {
+            accountDetail.value = res.data.profile;
+            store.commit('updateLoginState', true);
+            localStorage.setItem('uid', res.data.profile.userId);
+        } else {
+            store.commit('updateLoginState', false);
+            localStorage.removeItem('userId');
+        }
+    }
     getInputHistory();
+    getCurrentAccountDetail();
     getHotSearch();
 </script>
 
@@ -194,14 +217,14 @@
     .hot-search-item:hover{
         background-color: rgba(162, 158, 158, 0.1);
     }
-    .search-suggest{
+    .search-suggest {
         --padding: 15px;
         position: absolute;
+        z-index: 99;
         top: 100%;
         left: 0;
         width: 100%;
         background-color: white;
-        z-index: 3;
         border-radius: 10px;
         margin-top: 10px;
         padding-top: 20px;
@@ -226,7 +249,6 @@
         box-shadow: 0 0 10px rga(0, 0, 0, 0.3);
     }
     .headerbar {
-        box-sizing: border-box;
         padding-left: 25px;
         padding-right: 130px;
         height: 100%;

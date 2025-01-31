@@ -1,8 +1,64 @@
+import provinceData from "@/assets/json/province.json";
+const Municipalities = [
+        {
+            "code": 11,
+            "name": "北京市"
+        },
+        {
+            "code": 12,
+            "name": "天津市"
+        },
+        {
+            "code": 31,
+            "name": "上海市"
+        },
+        {
+            "code": 50,
+            "name": "重庆市"
+        }
+]
+
+export function convertProvinceCodeToName(provinceCode) {
+    const municipalityCode = Math.floor(provinceCode / 10000);
+
+    // 先特殊判断是否为直辖市
+    const municipality = Municipalities.find(city => city.code == municipalityCode);
+    if (municipality) {
+        return "直辖市";
+    }
+
+    // 查找省份
+    const province = provinceData.find(province => province.code == provinceCode);
+    return province ? province.name : "未知"; // 如果找到省份则返回名字，否则返回"未知"
+}
+
+export function convertCityCodeToName(cityCode) {
+    const municipalityCode = Math.floor(cityCode / 10000);
+
+    // 先特殊判断是否为直辖市
+    const municipality = Municipalities.find(city => city.code == municipalityCode);
+    if (municipality) {
+        return municipality.name;
+    }
+
+    // 计算省份代码
+    const provinceCode = Math.floor(cityCode / 10000) * 10000;
+    // 查找省份
+    const province = provinceData.find(province => province.code == provinceCode);
+    if (province) {
+        // 查找城市
+        const city = province.cityList.find(city => city.code == cityCode);
+        if (city) {
+            return city.name;
+        }
+    }
+    return "未知"; // 未找到城市，返回"未知"
+}
+
 // 生成当前时间戳
 export function getTimeStamp() {
     return Date.now();
 }
-
 // 格式化时间
 export function formatDate(date, fmt) {
     // 1.获取年份

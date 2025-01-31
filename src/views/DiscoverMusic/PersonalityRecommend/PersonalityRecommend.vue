@@ -1,12 +1,12 @@
 <template>
-    <div class="personality-recommend">
+    <div>
         <SliderCard :sliders="sliders"/>
-        <div class="recommendMusicList">
-            <h2 style="display: flex; align-items: center; margin-bottom: 15px;">
+        <div :ref="containerRef">
+            <h2 class="title" :ref="titleRef">
                 推荐歌单
                 <ArrowRightBold style="width: 25px; height: 25px;"/>
             </h2>
-            <ListCard :listCardData="musicList" @clickListCard="handleClickListCard"/>
+            <ListCard :listCardData="musicList"/>
         </div>
     </div>
 </template>
@@ -21,13 +21,7 @@
 
     const sliders = ref([]);
     const musicList = ref([]);
-    const router = useRouter();
     
-    const handleClickListCard = (id) => {
-        // console.log(id);
-        router.push({ name: 'musicListDetail', params: { id } });
-    }
-
     const getCarouselData = async () => {
         const res = await request('/banner');
         sliders.value = res.data.banners;
@@ -39,15 +33,14 @@
         // console.log(res.data);
         musicList.value = res.data.result;
     }
-
     getCarouselData();
     getMusicListData();
 </script>
 
 <style scoped>
-    .personality-recommend{
-        padding: 0 20px 20px 20px;
-        height: calc(100vh - 160px); /* 视窗大小减掉navbar高度、el-header高度*/
-        overflow: auto;
+    .title{
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
     }
 </style>

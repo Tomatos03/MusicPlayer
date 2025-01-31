@@ -52,6 +52,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        width: 100%;
     }
     .album-card img{
         width: 100%;

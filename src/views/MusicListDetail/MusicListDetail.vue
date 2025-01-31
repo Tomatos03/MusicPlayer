@@ -14,9 +14,11 @@
                     <span v-else>暂无标签</span>
                 </p>
                 <div class="author-info">
-                    <img :src="musiclistDetail.creator.avatarUrl" alt="avatar" class="author-avatar">
-                    <span>{{ musiclistDetail.creator.nickname }}</span>
-                    <span style="color: #949494;">{{ showDate(musiclistDetail.createTime) }}</span>
+                    <div class="wrapper" @click="goToAccountDetailById(musiclistDetail.creator.userId)">
+                        <img :src="musiclistDetail.creator.avatarUrl" alt="avatar" class="avatar">
+                        <span>{{ musiclistDetail.creator.nickname }}</span>
+                    </div>
+                    <span style="color: #949494;">{{ showDate(musiclistDetail.createTime) }} 创建</span>
                 </div>
                 <div class="btns">
                     <el-button color="#FC3D49" size="large" type="primary" :icon="'CaretRight'">播放全部</el-button>
@@ -54,18 +56,25 @@
 
 <script setup>
     import { request } from '@/network/request'
-    import { useRoute } from 'vue-router'
+    import { useRoute, useRouter } from 'vue-router'
     import { ref } from 'vue';
     import { formatDate } from '@/utils/utils';
     import { handleMusicTime } from '@/utils/utils';
     const musiclistDetail = ref(null);
     const songs = ref(null);
     const route = useRoute()
+    const router = useRouter();
     const showDate = (time) => {
         // console.log(time)
         const date = new Date(time);
         return formatDate(date, "yyyy-MM-dd");
     }
+    const goToAccountDetailById = (id) => {
+        router.push({
+            name: "accountDetail", 
+            params: { uid: id }
+        });
+    };
 
     // 根据歌单id获取歌单详情信息
     const getMusicListDetail = async () => {
@@ -138,10 +147,15 @@
         border-radius: 15px;
         object-fit: cover;
     }
-    .author-info .author-avatar{
+    .author-info .avatar{
         height: 30px;
         width: 30px;
         border-radius: 50%;
+    }
+    .author-info .wrapper {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
     }
     .musiclist-info .profile{
         flex-grow: 1;

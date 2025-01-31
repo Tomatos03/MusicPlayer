@@ -13,7 +13,6 @@
 <script setup>
     import { request } from '@/network/request';
     import { getTimeStamp } from '@/utils/utils';
-    import { ElMessage } from 'element-plus';
     import { onBeforeUnmount, ref, watch } from 'vue';
     import { useStore } from 'vuex';
     const { activeIndex } = defineProps({
@@ -71,8 +70,9 @@
             const code = await getCaptchaStateCode();
             if(CaptchaState.SUCCESS === code){
                 clearInterval(checkCaptchaStatus);
-                getAccountInfo();
-                // console.log("登录成功");
+                store.commit('updateLoginState', true);
+                emit('loginSuccess');
+                console.log("登录成功");
             } else if(CaptchaState.EXPIRED === code){
                 updateCaptcha();
             }
@@ -83,16 +83,6 @@
     const updateCaptcha = () => {
         clearInterval(checkCaptchaStatus);
         startCaptchaLogin();
-    }
-
-    const getAccountInfo = async () => {
-        const res = await request('/user/account');
-        if (res.data.code == 200) {
-            ElMessage.success('登录成功');
-            store.commit('updateLoginState', true);
-            console.log("CaptchaLogin", res.data.profile);
-            emit('loginSuccess', res.data.profile);
-        }
     }
 
     // 解构props不能直接提供给watch，需要使用getter方法间接提供

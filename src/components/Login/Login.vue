@@ -19,9 +19,9 @@
     import { ref } from 'vue';
     const emit = defineEmits()
     const activeIndex = ref(0);
-    const transferLoginSuccess = (userProfile) => {
-        console.log("Login",userProfile)
-        emit('loginSuccess', userProfile)
+    const transferLoginSuccess = () => {
+        emit('loginSuccess');
+        console.log("登录成功");
     }
     const handleTabClick = (e) => {
         // console.log(e.index);

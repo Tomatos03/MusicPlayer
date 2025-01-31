@@ -2,8 +2,7 @@
     <div class="opt-login">
         <el-form 
             :rules="rule" 
-            :model="loginForm"
-            >
+            :model="loginForm">
             <el-form-item label="手机号" prop="phone">
                 <el-input v-model="loginForm.phone" placeholder="请输入手机号"></el-input>
             </el-form-item>
@@ -12,8 +11,7 @@
                 <el-button 
                     @click="getCode"
                     style="margin-left: 5px; padding: 5px;" 
-                    type="primary"
-                    >
+                    type="primary">
                     获取验证码
                 </el-button>
             </el-form-item>
@@ -47,22 +45,11 @@
         const res = await request('/captcha/sent', { phone: loginForm.value.phone });
         // console.log(res);
     }
-
-    const getAccountInfo = async () => {
-        const res = await request('/user/account');
-        if (res.data.code == 200) {
-            console.log(res);
-            // console.log(res.data.profile);
-            ElMessage.success('登录成功');
-            store.commit('updateLoginState', true);
-            emit('loginSuccess', res.data.profile);
-        }
-    }
     const verityLogin = async () => {
         const res = await request('/captcha/verify', { phone: loginForm.value.phone, captcha: loginForm.value.code });
-        // console.log(res);
         if (res.data.code == 200) {
-            getAccountInfo();
+            store.commit('updateLoginState', true);
+            emit('loginSuccess');
         }
     }
 

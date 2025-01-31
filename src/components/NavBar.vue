@@ -1,12 +1,10 @@
 <template>
     <div class="navbar">
-        <div 
-            class="navbar-item" 
-            v-for="(item, index) in navItems" 
+        <div v-for="(item, index) in navItems"
+                class="navbar-item" 
                 :class="index === activeIndex ? 'active' : ''"
                 :key="index"
-                @click="navBarClickItem(index, item.path)"
-        >
+                @click="navBarClickItem(index, item.path)">
             {{item.name}}
         </div>
     </div>
@@ -46,7 +44,6 @@
     .navbar {
         display: flex;
         align-items: center;
-        padding: 0 30px;
         height: 100%;
         width: 100%;
     }

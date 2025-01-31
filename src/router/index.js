@@ -13,7 +13,9 @@ const MusicRank = () => import('../views/DiscoverMusic/MusicRank/MusicRank.vue')
 const Singer = () => import('../views/DiscoverMusic/Singer/Singer.vue')
 
 const MusicListDetail = () => import('../views/MusicListDetail/MusicListDetail.vue');
-const SearchResultDetail= () => import('../views/SearchResultDetail/SearchResultDetail.vue');
+const SearchResultDetail = () => import('../views/SearchResultDetail/SearchResultDetail.vue');
+const AccountDetail = () => import('@/views/AccountDetail/AccountDetail.vue');
+const EditAccount = () => import('@/views/EditAccount/EditAccount.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +73,16 @@ const router = createRouter({
           path: '/searchResult/:content',
           name: 'searchResult',
           component: SearchResultDetail
+        },
+        {
+          path: '/accountDetail/:uid',
+          name: 'accountDetail',
+          component: AccountDetail
+        },
+        {
+          path: '/editAccount/:uid',
+          name: 'editAccount',
+          component: EditAccount
         }
       ]
     },

@@ -27,12 +27,14 @@
             </el-main>
         </el-container>
     </el-container>
+    <MusicControler componentHeight="13vh"/>
 </template>
 
 <script setup>
     import HeaderBar from '@/components/HeaderBar.vue';
     import { RouterView, useRoute, useRouter } from 'vue-router';
     import { ref } from 'vue';
+    import MusicControler from '@/components/MusicControler.vue';
     const asideListItem = ref([
         {
             name: "发现音乐", 
@@ -81,13 +83,17 @@
 
 <style scoped>
     .index{
-        height: 100vh;
+        height: 87vh;
+        width: 100vw;
     }
     .el-aside .logo{
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 30px;
+    }
+    .el-menu-item:hover {
+        background-color: rgba(195, 195, 195, 0.3);
     }
     .el-menu-item i{
         font-size: 25px;
@@ -126,6 +132,8 @@
         width: 80vw;
         min-width: 700px;
         background-color: #F7F9FC;
+        padding-bottom: 0; /* 覆盖element自带的padding */ 
+        padding-top: 0;
     }
     .el-main{
         overflow: hidden;
