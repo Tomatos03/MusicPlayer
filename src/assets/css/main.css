@@ -1,10 +1,15 @@
-@import './base.css';
-@import '//at.alicdn.com/t/c/font_4818821_3lf7uk6lbbj.css';
-@import './modifyelementui.css';
+@import "./base.css";
+@import "//at.alicdn.com/t/c/font_4818821_jc2kd13t8zn.css";
+@import "./modifyelementui.css";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
-body, html{
-  font-size: 16px;
+body,
+html {
+    font-size: 16px;
+    color: #444444;
+    font-family: "Roboto", sans-serif;
 }
-#app{
-  min-height: 100vh;
+
+#app {
+    min-height: 100vh;
 }

@@ -2,7 +2,9 @@
     "tabWidth": 4,
     "useTabs": false,
     "$schema": "https://json.schemastore.org/prettierrc",
-    "semi": false,
-    "printWidth": 100,
+    "semi": true,
+    "printWidth": 80,
+    "htmlWhitespaceSensitivity": "strict",
+    "bracketSameLine": true,
     "vueIndentScriptAndStyle": true
 }
