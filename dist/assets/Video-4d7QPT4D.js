@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{c,a as o}from"./index-Cmw_d75W.js";const r={};function t(n,a){return o(),c("h1",null,"视频")}const f=e(r,[["render",t]]);export{f as default};

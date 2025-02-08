@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{c,a as r}from"./index-Cmw_d75W.js";const t={};function o(n,a){return r(),c("h1",null,"歌单")}const f=e(t,[["render",o]]);export{f as default};
