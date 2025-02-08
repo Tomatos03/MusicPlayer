@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div class="recommend">
         <SliderCard :sliders="sliders" />
         <div>
-            <h2 class="title">
+            <h2 class="recommend__title">
                 推荐歌单
-                <ArrowRightBold style="width: 25px; height: 25px" />
+                <ArrowRightBold class="recommend__title-icon" />
             </h2>
             <ListCard :listCardData="musicList" />
         </div>
@@ -35,10 +35,17 @@
     getMusicListData();
 </script>
 
-<style scoped>
-    .title {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
+<style lang="scss" scoped>
+    @include b("recommend") {
+        $title-icon-size: 25px;
+        @include e("title") {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        @include e("title-icon") {
+            height: $title-icon-size;
+            width: $title-icon-size;
+        }
     }
 </style>

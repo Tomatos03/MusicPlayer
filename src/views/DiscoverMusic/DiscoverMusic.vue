@@ -1,10 +1,12 @@
 <template>
-    <div class="discover-container" ref="containerRef">
-        <div class="navbar-container" ref="navBarRef">
-            <NavBar :navItems="navItems" @navBarClickItem="handleNavBarClickItem" />
+    <div class="discover" ref="containerRef">
+        <div class="discover__navbar" ref="navBarRef">
+            <NavBar
+                :navItems="navItems"
+                @navBarClickItem="handleNavBarClickItem" />
         </div>
         <el-scrollbar :height="scrollBarHeight">
-            <RouterView class="discover-music" />
+            <RouterView class="discover__music" />
         </el-scrollbar>
     </div>
 </template>
@@ -41,16 +43,16 @@
     });
 </script>
 
-<style scoped>
-    .discover-container {
+<style lang="scss" scoped>
+    @include b("discover") {
         width: 100%;
         height: 100%;
-    }
-    .discover-music {
-        margin-bottom: 10px;
-    }
-    .navbar-container {
-        width: 100%;
-        height: 50px;
+        @include e("navbar") {
+            width: 100%;
+            height: 50px;
+        }
+        @include e("music") {
+            margin-bottom: 10px;
+        }
     }
 </style>

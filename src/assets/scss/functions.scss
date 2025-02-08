@@ -1,0 +1,26 @@
+@use "sass:string" as *;
+@use "sass:meta" as *;
+@use "configs" as *;
+
+@function selectorToString($selector) {
+    // https://sass.nodejs.cn/documentation/modules/meta/#inspect
+    $selector: inspect($selector);
+    //https://sass.nodejs.cn/documentation/modules/string/#index
+    $selector: slice($selector, 2, -2);
+    @return $selector;
+}
+
+@function containsModifier($selector) {
+    $selector: selectortostring($selector);
+    //https://sass.nodejs.cn/documentation/modules/string/#index
+    @return index($selector, $modifier-separator) != null;
+}
+
+@function containPseudoClass($selector) {
+    $selector: selectorToString($selector);
+    @return index($selector, ":") != null;
+}
+
+@function hitAllSpecialNestRule($selector) {
+    @return containsModifier($selector) or containPseudoClass($selector);
+}

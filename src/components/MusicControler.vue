@@ -1,11 +1,11 @@
 <template>
-    <div class="music-controler" :style="{ height: componentHeight }">
-        <div class="left">
+    <div class="music-controller" :style="{ height: componentHeight }">
+        <div class="music-controller__left">
             <div
                 :class="[
-                    'music-disc',
-                    'rotate',
-                    isPausePlay ? 'stop-rotate' : '',
+                    'music-controller__disc',
+                    'music-controller__disc--rotate',
+                    isPausePlay && 'music-controller__disc--pause',
                 ]">
                 <img
                     :src="
@@ -13,24 +13,28 @@
                             ? songs[currentSongIndex].cover
                             : '/src/assets/images/disc-default.png'
                     " />
-                <img src="/src/assets/images/disc.png" class="disc" />
+                <img
+                    src="/src/assets/images/disc.png"
+                    class="music-controller__disc-img" />
             </div>
-            <div class="music-info">
-                <p class="song-name">
+            <div class="music-controller__info">
+                <p class="music-controller__song-name">
                     {{
                         currentSongIndex != -1
                             ? songs[currentSongIndex].name
                             : "暂无音乐播放"
                     }}
                 </p>
-                <div v-if="currentSongIndex != -1" class="song-authors">
+                <div
+                    v-if="currentSongIndex != -1"
+                    class="music-controller__authors">
                     {{ getAuthorsString(songs[currentSongIndex].authors) }}
                 </div>
                 <div class="btns"></div>
             </div>
         </div>
-        <div class="middle">
-            <div class="btns">
+        <div class="music-controller__middle">
+            <div class="music-controller__control">
                 <i class="iconfont icon-love0"></i>
                 <i @click="playNextSong" class="iconfont icon-previous"></i>
                 <i
@@ -42,7 +46,7 @@
                 <i @click="playPrevSong" class="iconfont icon-next"></i>
                 <i class="iconfont icon-order"></i>
             </div>
-            <div class="progress">
+            <div class="music-controller__progress">
                 <audio
                     ref="audioPlayerRef"
                     :src="
@@ -56,7 +60,7 @@
                     @loadeddata="updateDuration"
                     @canplaythrough="playMusic"
                     @ended="playNextSong"></audio>
-                <div class="current-time">
+                <div class="music-controller__time">
                     {{ handleMusicTime(playedTime) }}
                 </div>
                 <input
@@ -66,10 +70,12 @@
                     min="0"
                     :max="duration"
                     v-model="playedTime" />
-                <div class="end-time">{{ handleMusicTime(duration) }}</div>
+                <div class="music-controller__time">{{
+                    handleMusicTime(duration)
+                }}</div>
             </div>
         </div>
-        <div class="right">
+        <div class="music-controller__right">
             <i class="iconfont icon-volum2"></i>
             <i class="iconfont icon-playlist"></i>
         </div>
@@ -165,17 +171,15 @@
     });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     $disc-size: 80px;
     $play-btn-size: 55px;
     $btn-size: 40px;
     $btn-font-size: 35px;
-    $playbar-width: 200px;
-    $playbar-height: 3px;
-    $theme-background-color: #fc3d49;
+    $progress-height: 8px;
     $theme-font-color: #787f8d;
 
-    .music-controler {
+    @include b("music-controller") {
         background-color: #fff;
         border-top: 1px solid rgba(195, 195, 195, 0.5);
         overflow: hidden;
@@ -185,142 +189,20 @@
         display: flex;
         padding: 0 30px;
 
-        .left,
-        .middle,
-        .right {
+        @include e(("left", "middle", "right")) {
             flex: 1;
             display: flex;
         }
-
-        .left {
+        @include e("left") {
             align-items: center;
             gap: 10px;
-
-            .music-info {
-                display: flex;
-                flex-direction: column;
-
-                .song-name {
-                    font-size: 1.1em;
-                }
-                .song-authors {
-                    color: #999999;
-                    font-size: 0.8em;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                    white-space: nowrap;
-                }
-            }
-
-            .music-disc {
-                padding: 10px;
-                height: $disc-size;
-                width: $disc-size;
-                min-height: $disc-size;
-                min-width: $disc-size;
-                position: relative;
-
-                img {
-                    height: 100%;
-                    width: 100%;
-                    border-radius: 100%;
-                    object-fit: cover;
-                }
-
-                .disc {
-                    position: absolute;
-                    object-fit: contain;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                    height: 100%;
-                }
-            }
         }
-
-        .middle {
+        @include e("middle") {
             flex-direction: column;
             justify-content: center;
             gap: 10px;
-
-            .btns,
-            .progress {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-            }
-
-            .progress {
-                gap: 10px;
-
-                .end-time,
-                .current-time {
-                    color: $theme-font-color;
-                }
-
-                input[type="range"] {
-                    -webkit-appearance: none;
-                    appearance: none;
-                    height: 8px;
-                    min-width: 300px;
-                    width: 100%;
-                    background: linear-gradient(
-                        to right,
-                        #fc3d49 0%,
-                        #eee 100%
-                    );
-                    transition: background 1s ease;
-                    border-radius: 10px;
-                    outline: none;
-                    cursor: pointer;
-                }
-
-                input[type="range"]::-webkit-slider-runnable-track {
-                    height: 10px;
-                    background: transparent;
-                    border-radius: 10px;
-                }
-
-                input[type="range"]::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    appearance: none;
-                    width: 0px;
-                    height: 0px;
-                }
-            }
-
-            .btns {
-                i {
-                    cursor: pointer;
-                }
-
-                .icon-play,
-                .icon-pause {
-                    width: $play-btn-size;
-                    height: $play-btn-size;
-                    font-size: $btn-font-size;
-                    color: #fff;
-                    border-radius: 100%;
-                    background-color: $theme-background-color;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                .icon-love0,
-                .icon-love1,
-                .icon-order,
-                .icon-next,
-                .icon-previous {
-                    width: $btn-size;
-                    height: $btn-size;
-                    font-size: $btn-font-size;
-                }
-            }
         }
-
-        .right {
+        @include e("right") {
             align-items: center;
             justify-content: end;
 
@@ -330,13 +212,120 @@
                 width: $btn-size;
             }
         }
-    }
+        @include e(("progress", "control")) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        @include e("control") {
+            i {
+                cursor: pointer;
+            }
 
-    .rotate {
-        animation: rotate 15s linear infinite;
-    }
-    .stop-rotate {
-        animation-play-state: paused;
+            .icon-play,
+            .icon-pause {
+                width: $play-btn-size;
+                height: $play-btn-size;
+                font-size: $btn-font-size;
+                color: #fff;
+                border-radius: 100%;
+                background-color: $theme-color;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .icon-love0,
+            .icon-love1,
+            .icon-order,
+            .icon-next,
+            .icon-previous {
+                width: $btn-size;
+                height: $btn-size;
+                font-size: $btn-font-size;
+            }
+        }
+        @include e("progress") {
+            gap: 10px;
+
+            input[type="range"] {
+                -webkit-appearance: none;
+                appearance: none;
+                height: $progress-height;
+                min-width: 300px;
+                width: 100%;
+                background: linear-gradient(
+                    to right,
+                    $theme-color 0%,
+                    #eee 100%
+                );
+                transition: background 1s ease;
+                border-radius: 10px;
+                outline: none;
+                cursor: pointer;
+            }
+
+            input[type="range"]::-webkit-slider-runnable-track {
+                height: 10px;
+                background: transparent;
+                border-radius: 10px;
+            }
+
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 0px;
+                height: 0px;
+            }
+        }
+        @include e("time") {
+            color: $theme-font-color;
+        }
+        @include e("info") {
+            display: flex;
+            flex-direction: column;
+        }
+        @include e("disc") {
+            padding: 10px;
+            height: $disc-size;
+            width: $disc-size;
+            min-height: $disc-size;
+            min-width: $disc-size;
+            position: relative;
+
+            img {
+                height: 100%;
+                width: 100%;
+                border-radius: 100%;
+                object-fit: cover;
+            }
+
+            @include m(rotate) {
+                animation: rotate 15s linear infinite;
+            }
+            @include m(pause) {
+                animation-play-state: paused;
+            }
+        }
+        @include e("disc-img") {
+            position: absolute;
+            object-fit: contain;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+        @include e("song-name") {
+            font-size: 1.1em;
+        }
+        @include e("authors") {
+            color: #999999;
+            font-size: 0.8em;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
     }
 
     @keyframes rotate {
