@@ -95,6 +95,9 @@
                             max="1"
                             step="0.01"
                             @input="adjustVolume" />
+                        <<<<<<< HEAD =======
+                        <span>{{ Math.floor(volume * 100) }}%</span>
+                        >>>>>>> 4b04b48 (重构部分代码，完善音乐播放器部分功能)
                     </div>
                 </template>
             </el-popover>
@@ -228,11 +231,13 @@
             width: 100%;
             height: 100%;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
 
             input {
-                -webkit-appearance: slider-vertical;
+                writing-mode: vertical-lr;
+                direction: rtl;
             }
         }
 

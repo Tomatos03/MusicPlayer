@@ -59,8 +59,8 @@ export const getPlayListSongInfo = async (_id) => {
 };
 
 export const getSongUrlById = async (_id) => {
-    // const res = await request("/song/url", { id: _id });
-    // return res;
+    const res = await request("/song/url", { id: _id });
+    return res.data.data[0].url;
 };
 
 export const getUserPlayListById = async (id) => {

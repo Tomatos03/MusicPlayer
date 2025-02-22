@@ -102,13 +102,16 @@
 </template>
 
 <script setup>
-    import { request } from "@/network/request";
     import { useRoute, useRouter } from "vue-router";
     import { ref } from "vue";
     import { formatDate } from "@/utils/utils";
     import { handleMusicTime } from "@/utils/utils";
     import { useStore } from "vuex";
-    import { getPlayListInfo, getPlayListSongInfo } from "@/services/api";
+    import {
+        getPlayListInfo,
+        getPlayListSongInfo,
+        getSongUrlById,
+    } from "@/services/api";
     const store = useStore();
     const musiclistDetail = ref(null);
     const songs = ref(null);
@@ -140,23 +143,16 @@
     };
 
     const playMusic = async (rowItem) => {
-        console.log(rowItem);
-        try {
-            const res = await request("/song/url", { id: rowItem.id });
-            const data = res.data.data[0];
-            // console.log(data);
-            const newSong = {
-                id: rowItem.id,
-                name: rowItem.name,
-                authors: rowItem.ar,
-                url: data.url,
-                cover: rowItem.al.picUrl,
-                duration: rowItem.dt,
-            };
-            store.dispatch("updateCurrentPlaySong", newSong);
-        } catch (error) {
-            console.error("获取音频 URL 出错:", error);
-        }
+        const songUrl = await getSongUrlById(rowItem.id);
+        const newSong = {
+            id: rowItem.id,
+            name: rowItem.name,
+            authors: rowItem.ar,
+            url: songUrl,
+            cover: rowItem.al.picUrl,
+            duration: rowItem.dt,
+        };
+        store.dispatch("updateCurrentPlaySong", newSong);
     };
 
     getMusicListDetail();

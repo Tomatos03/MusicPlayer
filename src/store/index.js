@@ -6,9 +6,9 @@ const store = createStore({
         currentSongIndex:
             JSON.parse(localStorage.getItem("lastPlaySongIndex")) || -1,
         songs: JSON.parse(localStorage.getItem("songs")) || [],
-        userLikePlayList: [],
-        userCollectPlayList: [],
-        userPlayList: [],
+        userCreatedPlayList: [],
+        userCollectedPlayList: [],
+        userLoveMusics: [],
     },
     mutations: {
         updatePlayList(state, playList) {
@@ -42,7 +42,6 @@ const store = createStore({
     },
     actions: {
         updateCurrentPlaySong({ commit, state }, newSong) {
-            console.log(typeof state.songs, state.songs);
             state.songs = state.songs.filter((song) => newSong.id != song.id);
 
             commit("addSong", newSong);
