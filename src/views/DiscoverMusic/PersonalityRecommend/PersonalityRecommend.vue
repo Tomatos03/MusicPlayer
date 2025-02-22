@@ -14,22 +14,18 @@
 <script setup>
     import ListCard from "@/components/ListCard.vue";
     import SliderCard from "@/components/SliderCard.vue";
-    import { request } from "@/network/request";
+    import { getBanners, getRecommendPlayList } from "@/services/api";
     import { ref } from "vue";
 
     const sliders = ref([]);
     const musicList = ref([]);
 
     const getCarouselData = async () => {
-        const res = await request("/banner");
-        sliders.value = res.data.banners;
-        //console.log(carouselData.value);
+        sliders.value = await getBanners();
     };
 
     const getMusicListData = async () => {
-        const res = await request("/personalized", { limit: 10 });
-        // console.log(res.data);
-        musicList.value = res.data.result;
+        musicList.value = await getRecommendPlayList(10);
     };
     getCarouselData();
     getMusicListData();

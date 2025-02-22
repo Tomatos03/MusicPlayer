@@ -35,15 +35,21 @@
         </div>
         <div class="music-controller__middle">
             <div class="music-controller__control">
-                <i class="iconfont icon-love0"></i>
-                <i @click="playNextSong" class="iconfont icon-previous"></i>
+                <i
+                    :class="[
+                        'iconfont',
+                        isLikeMusic(currentSongIndex)
+                            ? 'icon-love1'
+                            : 'icon-love0',
+                    ]"></i>
+                <i @click="playPrevSong" class="iconfont icon-previous"></i>
                 <i
                     @click="togglePlayPause"
                     :class="[
                         'iconfont',
                         isPausePlay ? 'icon-play' : 'icon-pause',
                     ]"></i>
-                <i @click="playPrevSong" class="iconfont icon-next"></i>
+                <i @click="playNextSong" class="iconfont icon-next"></i>
                 <i class="iconfont icon-order"></i>
             </div>
             <div class="music-controller__progress">
@@ -51,7 +57,7 @@
                     ref="audioPlayerRef"
                     :src="
                         currentSongIndex != -1
-                            ? songs[currentSongIndex].url
+                            ? `${songs[currentSongIndex].url}?id=${songs[currentSongIndex].id}.mp3`
                             : ''
                     "
                     preload="auto"
@@ -76,23 +82,45 @@
             </div>
         </div>
         <div class="music-controller__right">
-            <i class="iconfont icon-volum2"></i>
-            <i class="iconfont icon-playlist"></i>
+            <el-popover placement="top" trigger="hover" :width="50">
+                <template #reference>
+                    <i class="iconfont icon-volum2"></i>
+                </template>
+                <template #default>
+                    <div class="music-controller__volum-wrapper">
+                        <input
+                            type="range"
+                            v-model="volume"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            @input="adjustVolume" />
+                    </div>
+                </template>
+            </el-popover>
+            <i
+                class="iconfont icon-playlist"
+                @click="showPlayList = !showPlayList"></i>
+            <!-- 展示播放列表 -->
+            <PlayList :isShow="showPlayList"></PlayList>
         </div>
     </div>
 </template>
 <script setup>
     import { getAuthorsString, handleMusicTime } from "@/utils/utils";
-    import { computed, ref, onBeforeUnmount } from "vue";
+    import { computed, ref, onBeforeUnmount, isShallow } from "vue";
     import { useStore } from "vuex";
+    import PlayList from "./PlayList.vue";
     const props = defineProps({
         componentHeight: {
             type: String,
             default: "200px",
         },
     });
+    const showPlayList = ref(false);
     const store = useStore();
-    const songs = store.state.songs;
+    const songs = computed(() => store.state.songs);
+    const volume = ref(1.0);
     const playedTime = ref(0);
     const currentSongIndex = computed(() => store.state.currentSongIndex);
     const audioPlayerRef = ref(null);
@@ -100,6 +128,13 @@
     const duration = ref(0);
     const isPausePlay = ref(true);
     let animationFrameId = null;
+    const isLikeMusic = (song) => {
+        return true;
+    };
+    const adjustVolume = () => {
+        // volume 必须为float
+        audioPlayerRef.value.volume = parseFloat(volume.value);
+    };
     const togglePlayPause = () => {
         if (currentSongIndex.value == -1) return;
 
@@ -122,12 +157,12 @@
     };
     const playNextSong = () => {
         if (currentSongIndex.value == -1) return;
-        store.commit("playNextSong");
+        store.dispatch("playNextSong");
         audioPlayerRef.value.load();
     };
     const playPrevSong = () => {
         if (currentSongIndex.value == -1) return;
-        store.commit("playPrevSong");
+        store.dispatch("playPrevSong");
         audioPlayerRef.value.load();
     };
     const syncProgressWithPlayedTime = () => {
@@ -188,6 +223,18 @@
         min-height: 100px;
         display: flex;
         padding: 0 30px;
+
+        @include e("volum-wrapper") {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            input {
+                -webkit-appearance: slider-vertical;
+            }
+        }
 
         @include e(("left", "middle", "right")) {
             flex: 1;
@@ -326,6 +373,14 @@
             overflow: hidden;
             white-space: nowrap;
         }
+    }
+
+    .icon-love1 {
+        color: $theme-color;
+    }
+
+    i {
+        cursor: pointer;
     }
 
     @keyframes rotate {

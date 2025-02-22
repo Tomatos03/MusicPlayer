@@ -69,7 +69,7 @@
 </template>
 <script setup>
     import ListCard from "@/components/ListCard.vue";
-    import { request } from "@/network/request";
+    import { getAccountById, getUserPlayListById } from "@/services/api";
     import {
         convertProvinceCodeToName,
         convertCityCodeToName,
@@ -82,33 +82,24 @@
     const route = useRoute();
     const currentUid = route.params.uid;
     const myUid = localStorage.getItem("uid");
-    const getAccountById = async (id) => {
-        const res = await request("/user/detail", {
-            uid: id,
-        });
-        accountDetail.value = res.data;
-        console.log(accountDetail);
+    const getAccount = async () => {
+        accountDetail.value = await getAccountById(currentUid);
     };
     const router = useRouter();
     const goToEditAccount = () => {
         router.push({ name: "editAccount" });
     };
-    const getUserPlayListById = async (currentUid) => {
-        const res = await request("/user/playlist", {
-            uid: currentUid,
-        });
-        res.data.playlist.forEach((playList) => {
-            if (playList.creator.userId == currentUid) {
-                userCreatedPlayList.value.push(playList);
-            } else {
-                userCollectedPlayList.value.push(playList);
-            }
-        });
-        // console.log(userCollectedPlayList);
-        // console.log(userCreatedPlayList);
+    const getUserPlayList = async () => {
+        const userPlaylists = await getUserPlayListById(currentUid);
+        userCreatedPlayList.value = userPlaylists.filter(
+            (playlist) => playlist.creator.userId == currentUid,
+        );
+        userCollectedPlayList.value = userPlaylists.filter(
+            (playlist) => playlist.creator.userId != currentUid,
+        );
     };
-    getUserPlayListById(currentUid);
-    getAccountById(currentUid);
+    getUserPlayList();
+    getAccount();
 </script>
 <style lang="scss" scoped>
     @include b("account") {

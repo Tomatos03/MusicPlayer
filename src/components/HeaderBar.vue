@@ -97,10 +97,9 @@
 <script setup>
     import { ref } from "vue";
     import Login from "./Login/Login.vue";
-    import { request } from "@/network/request";
     import { useRouter } from "vue-router";
     import { useStore } from "vuex";
-    import { getTimeStamp } from "@/utils/utils";
+    import { getCurrentAccount, getHotSearchList } from "@/services/api";
     const store = useStore();
     const attemptLogin = ref(false);
     const accountDetail = ref(null);
@@ -166,19 +165,15 @@
         router.push({ name: "accountDetail", params: { uid: uid } });
     };
     const getHotSearch = async () => {
-        const res = await request("/search/hot/detail");
-        // console.log("热搜列表: ", res);
-        hotSearchList.value = res.data.data;
+        hotSearchList.value = await getHotSearchList();
     };
     const getCurrentAccountDetail = async () => {
-        const res = await request("/user/account", {
-            timestamp: getTimeStamp(),
-        });
+        const account = await getCurrentAccount();
         // console.log(res);
-        if (res.data.profile != null) {
-            accountDetail.value = res.data.profile;
+        if (account.profile != null) {
+            accountDetail.value = account.profile;
             store.commit("updateLoginState", true);
-            localStorage.setItem("uid", res.data.profile.userId);
+            localStorage.setItem("uid", account.profile.userId);
         } else {
             store.commit("updateLoginState", false);
             localStorage.removeItem("userId");

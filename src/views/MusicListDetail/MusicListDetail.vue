@@ -108,6 +108,7 @@
     import { formatDate } from "@/utils/utils";
     import { handleMusicTime } from "@/utils/utils";
     import { useStore } from "vuex";
+    import { getPlayListInfo, getPlayListSongInfo } from "@/services/api";
     const store = useStore();
     const musiclistDetail = ref(null);
     const songs = ref(null);
@@ -127,36 +128,30 @@
 
     // 根据歌单id获取歌单详情信息
     const getMusicListDetail = async () => {
-        const res = await request("/playlist/detail", {
-            id: route.params.id,
-        });
-        musiclistDetail.value = res.data.playlist;
-        console.log(musiclistDetail.value);
+        musiclistDetail.value = await getPlayListInfo(route.params.id);
     };
 
     // 根据歌单id获取歌单中全部歌曲的信息
     const getMusicListAllSong = async () => {
-        const res = await request("/playlist/track/all", {
-            id: route.params.id,
-        });
-        songs.value = res.data.songs;
+        songs.value = await getPlayListSongInfo(route.params.id);
         songs.value.forEach((item, index) => {
             songs.value[index].dt = handleMusicTime(item.dt);
         });
-        // console.log(songs.value)
     };
 
     const playMusic = async (rowItem) => {
         console.log(rowItem);
         try {
             const res = await request("/song/url", { id: rowItem.id });
-            // console.log(res.data.data[0]);
+            const data = res.data.data[0];
+            // console.log(data);
             const newSong = {
                 id: rowItem.id,
                 name: rowItem.name,
                 authors: rowItem.ar,
-                url: res.data.data[0].url,
+                url: data.url,
                 cover: rowItem.al.picUrl,
+                duration: rowItem.dt,
             };
             store.dispatch("updateCurrentPlaySong", newSong);
         } catch (error) {
@@ -216,11 +211,11 @@
     }
     .profile .description {
         display: -webkit-box;
-        -webkit-line-clamp: 3; /* 设置显示的行数 */
-        -webkit-box-orient: vertical; /* 设置布局方向 */
-        overflow: hidden; /* 超出部分隐藏 */
-        text-overflow: ellipsis; /* 溢出的文本显示省略号 */
-        max-height: 120px; /* 设置最大高度 */
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.5; /* 显式设置行高 */
     }
     .musiclist-info .profile .btns {
         flex-grow: 1;

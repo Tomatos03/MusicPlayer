@@ -52,6 +52,7 @@
     import AlbumCard from "@/components/AlbumCard.vue";
     import SongCard from "@/components/SongCard.vue";
     import AdaptiveContainer from "@/components/AdaptiveContainer.vue";
+    import { getSearchResultByWord } from "@/services/api";
     const searchResult = ref(null);
     const mvSearchResult = ref(null);
     const tabs = [
@@ -157,20 +158,12 @@
     //     activeTab.value = '7';
     // };
     const getSearchResult = async () => {
-        const res = await request("/search", {
-            keywords: searchContent,
-            type: 1018,
-        });
-        searchResult.value = res.data.result;
+        searchResult.value = await getSearchResultByWord(searchContent, 1018);
         // console.log("搜索结果: ", searchResult);
     };
     const getMVSearchResult = async () => {
-        const res = await request("/search", {
-            keywords: searchContent,
-            type: 1004,
-        });
-        mvSearchResult.value = res.data.result;
-        console.log("MV搜索结果", mvSearchResult);
+        mvSearchResult.value = await getSearchResultByWord(searchContent, 1004);
+        // console.log("MV搜索结果", mvSearchResult);
     };
     getSearchResult();
     getMVSearchResult();
