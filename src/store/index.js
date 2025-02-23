@@ -9,6 +9,7 @@ const store = createStore({
         userCreatedPlayList: [],
         userCollectedPlayList: [],
         userLoveMusics: [],
+        userLoveMusicPlayListId: -1,
     },
     mutations: {
         updatePlayList(state, playList) {
@@ -52,10 +53,6 @@ const store = createStore({
                 "lastPlaySongIndex",
                 JSON.stringify(state.currentSongIndex),
             );
-        },
-        indexIsLegal(index) {
-            const maxIndex = state.songs.length;
-            return index < 0 || index >= maxIndex;
         },
         playNextSong({ commit, state }) {
             commit("nextSongIndex");

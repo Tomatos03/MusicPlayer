@@ -9,7 +9,7 @@
                 ]">
                 <img
                     :src="
-                        songs[currentSongIndex]
+                        currentSongIndex != -1
                             ? songs[currentSongIndex].cover
                             : '/src/assets/images/disc-default.png'
                     " />
@@ -38,10 +38,14 @@
                 <i
                     :class="[
                         'iconfont',
-                        isLikeMusic(currentSongIndex)
+                        currentSongIndex != -1 &&
+                        state.userLoveMusics.includes(
+                            songs[currentSongIndex].id,
+                        )
                             ? 'icon-love1'
                             : 'icon-love0',
-                    ]"></i>
+                    ]"
+                    @click="handleLoveMusic(songs[currentSongIndex].id)"></i>
                 <i @click="playPrevSong" class="iconfont icon-previous"></i>
                 <i
                     @click="togglePlayPause"
@@ -84,7 +88,12 @@
         <div class="music-controller__right">
             <el-popover placement="top" trigger="hover" :width="50">
                 <template #reference>
-                    <i class="iconfont icon-volum2"></i>
+                    <!-- <i class="iconfont icon-volum2"></i> -->
+                    <i
+                        :class="[
+                            'iconfont',
+                            `icon-volume${Math.floor(volume * 2)}`,
+                        ]"></i>
                 </template>
                 <template #default>
                     <div class="music-controller__volum-wrapper">
@@ -95,9 +104,7 @@
                             max="1"
                             step="0.01"
                             @input="adjustVolume" />
-                        <<<<<<< HEAD =======
                         <span>{{ Math.floor(volume * 100) }}%</span>
-                        >>>>>>> 4b04b48 (重构部分代码，完善音乐播放器部分功能)
                     </div>
                 </template>
             </el-popover>
@@ -114,6 +121,8 @@
     import { computed, ref, onBeforeUnmount, isShallow } from "vue";
     import { useStore } from "vuex";
     import PlayList from "./PlayList.vue";
+    import { loveMusic } from "@/services/api";
+
     const props = defineProps({
         componentHeight: {
             type: String,
@@ -122,6 +131,7 @@
     });
     const showPlayList = ref(false);
     const store = useStore();
+    const state = store.state;
     const songs = computed(() => store.state.songs);
     const volume = ref(1.0);
     const playedTime = ref(0);
@@ -131,12 +141,28 @@
     const duration = ref(0);
     const isPausePlay = ref(true);
     let animationFrameId = null;
-    const isLikeMusic = (song) => {
-        return true;
-    };
     const adjustVolume = () => {
         // volume 必须为float
         audioPlayerRef.value.volume = parseFloat(volume.value);
+    };
+    const handleLoveMusic = async (songId) => {
+        if (currentSongIndex == -1) return;
+
+        const currentSongId = songs.value[currentSongIndex.value].id;
+        const isLoveMusic = state.userLoveMusics.includes(currentSongId);
+        const resCode = await loveMusic(songId, !isLoveMusic);
+        if (resCode == 200) {
+            console.log("操作成功");
+            if (isLoveMusic) {
+                state.userLoveMusics = state.userLoveMusics.filter(
+                    (id) => songId != id,
+                );
+            } else {
+                state.userLoveMusics.push(currentSongId);
+            }
+        } else {
+            console.log("操作失败");
+        }
     };
     const togglePlayPause = () => {
         if (currentSongIndex.value == -1) return;

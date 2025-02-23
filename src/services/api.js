@@ -6,6 +6,8 @@ import { getTimeStamp } from "@/utils/utils";
 export const getAccountById = async (id) => {
     const res = await request("/user/detail", {
         uid: id,
+
+        timestamp: getTimeStamp(),
     });
     return res.data;
 };
@@ -13,6 +15,8 @@ export const getAccountById = async (id) => {
 export const getSongById = async (_id) => {
     const res = await request("/song/detail", {
         ids: _id,
+
+        timestamp: getTimeStamp(),
     });
     // console.log(res);
     return res.data.songs[0];
@@ -29,12 +33,15 @@ export const getSearchResultByWord = async (searchContent, _type) => {
     const res = await request("/search", {
         keywords: searchContent,
         type: _type,
+        timestamp: getTimeStamp(),
     });
     return res.data.result;
 };
 
 export const getHotSearchList = async () => {
-    const res = await request("/search/hot/detail");
+    const res = await request("/search/hot/detail", {
+        timestamp: getTimeStamp(),
+    });
     return res.data.data;
 };
 export const getCurrentAccount = async () => {
@@ -47,6 +54,7 @@ export const getCurrentAccount = async () => {
 export const getPlayListInfo = async (_id) => {
     const res = await request("/playlist/detail", {
         id: _id,
+        timestamp: getTimeStamp(),
     });
     return res.data.playlist;
 };
@@ -54,18 +62,23 @@ export const getPlayListInfo = async (_id) => {
 export const getPlayListSongInfo = async (_id) => {
     const res = await request("/playlist/track/all", {
         id: _id,
+        timestamp: getTimeStamp(),
     });
     return res.data.songs;
 };
 
 export const getSongUrlById = async (_id) => {
-    const res = await request("/song/url", { id: _id });
+    const res = await request("/song/url", {
+        id: _id,
+        timestamp: getTimeStamp(),
+    });
     return res.data.data[0].url;
 };
 
 export const getUserPlayListById = async (id) => {
     const res = await request("/user/playlist", {
         uid: id,
+        timestamp: getTimeStamp(),
     });
     return res.data.playlist;
 };
@@ -73,4 +86,13 @@ export const getUserPlayListById = async (id) => {
 export const getRecommendPlayList = async (_limit) => {
     const res = await request("/personalized", { limit: _limit });
     return res.data.result;
+};
+
+export const loveMusic = async (songId, isLove) => {
+    const res = await request("/like", {
+        like: isLove,
+        id: songId,
+        timestamp: getTimeStamp(),
+    });
+    return res.data.code;
 };

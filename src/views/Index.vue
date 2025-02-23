@@ -45,9 +45,10 @@
     import { ref } from "vue";
     import MusicControler from "@/components/MusicControler.vue";
     import { useStore } from "vuex";
-    import { getUserPlayListById } from "@/services/api";
+    import { getUserPlayListById, getPlayListSongInfo } from "@/services/api";
     const uid = JSON.parse(localStorage.getItem("uid")) || -1;
     const store = useStore();
+    const state = store.state;
     const asideListItem = ref([
         {
             name: "发现音乐",
@@ -77,7 +78,7 @@
             name: "我喜欢的音乐",
             path: "/loveMusic",
             class: "iconfont icon-love",
-            isShow: store.state.userLoveMusics != undefined,
+            isShow: state.userLoveMusicPlayListId != -1,
         },
     ]);
     const activeIndex = ref("/discoverMusic");
@@ -87,13 +88,11 @@
         if (newIndex == activeIndex.value) {
             return;
         }
-        console.log(newIndex);
         activeIndex.value = newIndex;
         if (newIndex == "/loveMusic") {
-            const playlistId = store.state.userLoveMusics.id;
             router.push({
                 name: "musicListDetail",
-                params: { id: playlistId },
+                params: { id: state.userLoveMusicPlayListId },
             });
         } else {
             router.push(newIndex);
@@ -103,18 +102,24 @@
         if (uid == -1) return;
 
         const userPlaylists = await getUserPlayListById(uid);
-        store.state.userCreatedPlayList = userPlaylists.filter(
+        const state = store.state;
+        state.userCreatedPlayList = userPlaylists.filter(
             (playlist) => playlist.creator.userId == uid,
         );
 
-        store.state.userLoveMusics = store.state.userCreatedPlayList[0];
-
-        store.state.userCollectedPlayList = userPlaylists.filter(
+        state.userCollectedPlayList = userPlaylists.filter(
             (playlist) => playlist.creator.userId != uid,
         );
-        // console.log(store.state.userCollectedPlayList);
-        // console.log(store.state.userCreatedPlayList);
-        // console.log(store.state.userLoveMusics);
+        state.userLoveMusicPlayListId = state.userCreatedPlayList[0].id;
+        const playListSongInfo = await getPlayListSongInfo(
+            state.userCreatedPlayList[0].id,
+        );
+        playListSongInfo.forEach((songInfo) => {
+            state.userLoveMusics.push(songInfo.id);
+        });
+        // console.log(playListSongInfo);
+        // console.log(state.userLoveMusics);
+        // console.log(state.userLoveMusics);
     };
     const route = useRoute();
 
