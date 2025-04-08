@@ -1,3 +1,4 @@
+logi
 <template>
     <div class="headerbar">
         <div class="headerbar__left">
@@ -60,27 +61,21 @@
         </div>
         <div class="headerbar__right">
             <div class="login">
-                <el-popover
-                    v-if="!accountDetail"
-                    :width="300"
-                    trigger="click"
-                    @hide="attemptLogin = false"
-                    @show="attemptLogin = true">
-                    <!-- #reference定义触发Popover的DOM -->
-                    <template #reference>
-                        <div class="login__user-container">
-                            <el-avatar
-                                icon="UserFilled"
-                                :size="40"
-                                fit="cover" />
-                            <div>未登录</div>
-                        </div>
-                    </template>
-                    <!-- 触发后展示的内容 -->
+                <el-dialog
+                    v-model="attemptLogin"
+                    width="500"
+                    @hide="attemptLogin = false">
                     <Login
-                        v-if="attemptLogin"
-                        @loginSuccess="getCurrentAccountDetail" />
-                </el-popover>
+                        @loginSuccess="getCurrentAccountDetail"
+                        @close="attemptLogin = false" />
+                </el-dialog>
+                <div
+                    class="login__user-container"
+                    @click="attemptLogin = true"
+                    v-if="!store.state.isLogin">
+                    <el-avatar icon="UserFilled" :size="40" fit="cover" />
+                    <div>未登录</div>
+                </div>
                 <template v-else>
                     <el-avatar
                         :size="40"

@@ -118,7 +118,7 @@
 </template>
 <script setup>
     import { getAuthorsString, handleMusicTime } from "@/utils/utils";
-    import { computed, ref, onBeforeUnmount, isShallow } from "vue";
+    import { computed, ref, onBeforeUnmount } from "vue";
     import { useStore } from "vuex";
     import PlayList from "./PlayList.vue";
     import { loveMusic } from "@/services/api";
@@ -202,7 +202,7 @@
             ((songProgress.value - songProgress.min) /
                 (songProgress.max - songProgress.min)) *
             100;
-        songProgress.style.background = `linear-gradient(to right, #FC3D49 ${progress}%, #eee ${progress + 8}%)`;
+        songProgress.style.background = `linear-gradient(to right, #FC3D49 ${progress}%, #eee ${progress}%)`;
 
         playedTime.value = songProgress.value;
         audioPlayerRef.value.currentTime = songProgress.value;
@@ -217,8 +217,7 @@
             ((songProgress.value - songProgress.min) /
                 (songProgress.max - songProgress.min)) *
             100;
-        songProgress.style.background = `linear-gradient(to right, #FC3D49 ${progress}%, #eee ${progress + 8}%)`;
-        // songProgress.style.background = `linear-gradient(90deg, #840814 0%, #fc3d49 ${progress}%, #eeeeee 100%)`;
+        songProgress.style.background = `linear-gradient(to right, #FC3D49 ${progress}%, #eee ${progress}%)`;
     };
     const updateDuration = () => {
         duration.value = audioPlayerRef.value.duration;
@@ -333,11 +332,7 @@
                 height: $progress-height;
                 min-width: 300px;
                 width: 100%;
-                background: linear-gradient(
-                    to right,
-                    $theme-color 0%,
-                    #eee 100%
-                );
+                background: linear-gradient(to right, #eee 0%, #eee 100%);
                 transition: background 1s ease;
                 border-radius: 10px;
                 outline: none;
